@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var kindNames = map[uint8]string{
+var kindNames = map[int]string{
 	event.KindSetMetadata:            "Profile Metadata",
 	event.KindTextNote:               "Text Note",
 	event.KindRecommendServer:        "Relay Recommendation",
@@ -63,15 +63,15 @@ func shorten(id string) string {
 	return id[0:4] + "..." + id[len(id)-4:]
 }
 
-func printPublishStatus(statuses chan relaypool.PublishStatus) {
+func printPublishStatus(event *event.Event, statuses chan relaypool.PublishStatus) {
 	for status := range statuses {
 		switch status.Status {
 		case relaypool.PublishStatusSent:
-			fmt.Printf("Sent to '%s'.\n", status.Relay)
+			fmt.Printf("Sent event %s to '%s'.\n", event.ID, status.Relay)
 		case relaypool.PublishStatusFailed:
-			fmt.Printf("Failed to send to '%s'.\n", status.Relay)
+			fmt.Printf("Failed to send event %s to '%s'.\n", event.ID, status.Relay)
 		case relaypool.PublishStatusSucceeded:
-			fmt.Printf("Seen it on '%s'.\n", status.Relay)
+			fmt.Printf("Seen %s on '%s'.\n", event.ID, status.Relay)
 		}
 	}
 }

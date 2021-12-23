@@ -8,9 +8,9 @@ import (
 )
 
 func view(opts docopt.Opts) {
+	initNostr()
 	id := opts["<id>"].(string)
-
-	sub := pool.Sub(filter.EventFilter{ID: id})
+	sub := pool.Sub(filter.EventFilters{{ID: id}})
 
 	for event := range sub.UniqueEvents {
 		if event.ID != id {
